@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 from board.models import Question, Answer
@@ -8,15 +8,19 @@ from board.forms import QuestionForm, AnswerForm
 
 def index(request):
     # 질문 목록
-    question_list = Question.objects.all()  # db 전체 조회
+    # question_list = Question.objects.all()  # db 전체 조회
+    # 작성일 기준 내림차순( - 기호 사용)
+    question_list = Question.objects.order_by('-create_date')
     return render(request, 'board/question_list.html',
                   {'question_list': question_list})
     # return HttpResponse("pyweb 사이트입니다.")
 
 
 def detail(request, question_id):
-    # 질문 / 답변 상세
-    question = Question.objects.get(id=question_id)
+    # 질문 / 답변 상세 - 해당 id의 질문
+    # question = Question.objects.get(id=question_id)
+    # 경로에 오류가 있을 때 404로 처리(페이지가 없음)
+    question = get_object_or_404(Question, pk=question_id)
     return render(request, 'board/detail.html', {'question': question})
 
 

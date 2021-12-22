@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'common',
     'board',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -125,3 +126,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 로그인 성공 시 이동할 URL(루트 경로 - 첫 페이지)
+LOGIN_REDIRECT_URL = '/'
+# 로그아웃 성공 시 이동할 URL(루트 경로 - 첫 페이지)
+LOGOUT_REDIRECT_URL = '/'
