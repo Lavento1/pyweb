@@ -3,7 +3,7 @@
 <div class="container">
     <table class="table">
         <thead class="thead-dark">
-            <th>번호</th><th>제목</th><th>작성일시</th>
+            <th>번호</th><th>제목</th><th>글쓴이</th><th>작성일시</th>
         </thead>
         <tbody>
             {% if question_list %}
@@ -16,6 +16,7 @@
                             {{ question.subject }}
                         </a>
                     </td>
+                    <td>{{ question.author }}</td>
                     <td>{{ question.create_date }}</td>
                 </tr>
                 {% endfor %}
