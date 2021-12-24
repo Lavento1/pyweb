@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -12,8 +13,14 @@ def index(request):
     # question_list = Question.objects.all()  # db 전체 조회
     # 작성일 기준 내림차순( - 기호 사용)
     question_list = Question.objects.order_by('-create_date')
+    
+    # 페이지 처리
+    page = request.GET.get('page', 1)   # 127.0.0.1:8000/
+    paginator = Paginator(question_list, 10)    # 페이지당 10개 씩 설정
+    page_obj = paginator.get_page(page)  # 페이지 가져오기
+
     return render(request, 'board/question_list.html',
-                  {'question_list': question_list})
+                  {'question_list': page_obj})
     # return HttpResponse("pyweb 사이트입니다.")
 
 
@@ -83,3 +90,29 @@ def question_delete(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()   # 질문 삭제
     return redirect('board:index')
+
+
+@login_required(login_url='common:login')
+def answer_modify(request, answer_id):
+    # 답변 수정
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.method == "POST":
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save(commit=False)  # 수정된 답변 가저장
+            answer.author = request.user  # 세션 발급
+            answer.modify_date = timezone.now()  # 수정일
+            answer.save()
+            return redirect('board:detail', question_id=answer.question.id)
+    else:
+        form = AnswerForm(instance=answer)
+    return render(request, 'board/answer_form.html', {'form': form})
+
+
+@login_required(login_url='common:login')
+def answer_delete(request, answer_id):
+    # 질문 삭제
+    answer = get_object_or_404(Answer, pk=answer_id)
+    answer.delete()   # 질문 삭제
+    return redirect('board:detail', question_id=answer.question.id)
+
