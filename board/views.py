@@ -9,6 +9,10 @@ from board.forms import QuestionForm, AnswerForm
 
 
 def index(request):
+    return render(request, 'board/index.html')
+
+
+def board_list(request):
     # 질문 목록
     # question_list = Question.objects.all()  # db 전체 조회
     # 작성일 기준 내림차순( - 기호 사용)

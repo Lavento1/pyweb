@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <section>
+        <div class="card">
+            <div class="jumbotron">
+                <div class="text-center">
+                    <h1>투표 하기</h1>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-text" style="white-space:pre-line">
+                    <h4 style="margin: 20px 280px; color: skyblue">{{ question.question_text }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <form action="{% url 'poll:vote' question.id %}" method="post"
+                    style="width: 500px; margin: 0 auto;">
+                    {% csrf_token %}
+                    {% if error %}
+                        {{ error }}
+                    {% endif %}
+                    {% for choice in question.choice_set.all %}
+                    <p style="font-size:1.2rem">
+                        <input type="radio" name="choice" id="choice" value="{{ choice.id }}">
+                        <label for="choice">{{ choice.choice_text }}</label>
+                    </p>
+                    {% endfor %}
+                    <input type="submit" value="투표" class="btn btn-info">
+                    <div class="d-flex justify-content-end">
+                        <div class="badge badge-light text-right p-2">
+                            <div>{{ question.pub_date }}</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
