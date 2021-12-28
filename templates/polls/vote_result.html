@@ -1,26 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
+<div class="container my-3">
     <section>
-        <div class="jumbotron">
-            <div class="text-center">
-                <h1 class="text-danger">투표 결과</h1>
+        <h4 class="border-bottom py-2">투표 결과</h4>
+        <div class="card my-3" style="width: 50rem">
+            <h5 style="margin:20px 100px 10px;">{{ question.question_text }}</h5>
+            <ul style="width:500px; margin:0 100px; padding:0 10px;">
+                {% for choice in question.choice_set.all %}
+                <li style="margin:20px;">
+                    {{ choice.choice_text }} -- {{ choice.votes }}votes
+                </li>
+                {% endfor %}
+            </ul>
+            <div style="padding-left:100px;">
+                <a href="{% url 'poll:index' %}"
+                   class="btn btn-secondary my-4">설문목록 가기</a>
             </div>
         </div>
-        <h4 style="margin: 20px 280px;">{{ question.question_text }}</h4>
-        <ul style="width: 500px; margin: 0 auto;">
-            {% for choice in question.choice_set.all %}
-            <li style="margin: 20px">
-                <p style="font-size:1.2rem">
-                    {{ choice.choice_text }} --
-                    <span class="text-primary">
-                        {{ choice.votes }}
-                    </span>
-                     votes
-                </p>
-            </li>
-            {% endfor %}
-        </ul>
     </section>
 </div>
 {% endblock %}

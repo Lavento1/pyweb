@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>pyweb</title>
     <link rel="stylesheet" href="{% static 'board/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
 </head>
 <body>
 {% include 'navbar.html' %}
@@ -13,6 +14,7 @@
 
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 end -->
+{% include 'footer.html' %}
 <script src="{% static 'board/js/jquery-3.6.0.js' %}"></script>
 <script src="{% static 'board/js/bootstrap.js' %}"></script>
 {% block script %}
