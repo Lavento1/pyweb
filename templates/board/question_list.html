@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% load board_filter %}
 {% block content %}
-<div class="container">
+<div class="container my-3">
     <section>
+        <!-- 검색 입력 상자와 찾기 버튼 -->
+        <div class="row justify-content-end mb-2">
+            <div class="col-4 input-group">
+                <input type="text" class="kw form-control"
+                value="{{ kw|default_if_none:'' }}">
+                <div class="input-group-append">
+                    <button id="btn_search" type="button" class="btn btn-outline-secondary">검색</button>
+                </div>
+            </div>
+        </div>
+        <!-- 게시판 목록 -->
         <table class="table">
             <thead class="thead-dark">
                 <th>번호</th><th>추천수</th><th>제목</th><th>글쓴이</th><th>작성일시</th>
@@ -47,8 +58,10 @@
             <!-- 이전 페이지 -->
             {% if question_list.has_previous %}
             <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ question_list.previous_page_number }}">
+<!--                <a class="page-link"-->
+<!--                   href="?page={{ question_list.previous_page_number }}">-->
+                <a class="page-link" href="#"
+                    data-page="{{ question_list.previous_page_number }}">
                     이전
                 </a>
             </li>
@@ -63,21 +76,27 @@
             {% for page_number in question_list.paginator.page_range %}
                 {% if page_number == question_list.number %}
                 <li class="page-item active">
-                    <a class="page-link"
-                    href="?page={{ page_number }}">{{ page_number }}</a>
+<!--                    <a class="page-link"-->
+<!--                    href="?page={{ page_number }}">{{ page_number }}</a>-->
+                    <a class="page-link" href="#"
+                    data-page="{{ page_number }}">{{ page_number }}</a>
                 </li>
                 {% else %}
                 <li class="page-item">
-                    <a class="page-link"
-                    href="?page={{ page_number }}">{{ page_number }}</a>
+<!--                    <a class="page-link"-->
+<!--                    href="?page={{ page_number }}">{{ page_number }}</a>-->
+                    <a class="page-link" href="#"
+                    data-page="{{ page_number }}">{{ page_number }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
             <!-- 다음 페이지 -->
             {% if question_list.has_next %}
             <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ question_list.next_page_number }}">
+<!--                <a class="page-link"-->
+<!--                   href="?page={{ question_list.next_page_number }}">-->
+                <a class="page-link" href="#"
+                    data-page="{{ question_list.next_page_number }}">
                     다음
                 </a>
             </li>
@@ -92,6 +111,30 @@
 
         <!--  페이징 처리 끝  -->
         <a class="btn btn-primary" href="{% url 'board:question_create' %}">질문 등록</a>
+        <!-- 검색 폼 만들기 -->
+        <form action="" method="get" id="searchForm">
+            <input type="hidden" name="kw" id="kw">
+            <input type="hidden" name="page" id="page">
+        </form>
     </section>
 </div>
+{% block script %}
+<script>
+    $(document).ready(function(){
+        // 페이지 처리
+        $(".page-link").on('click', function(){   // 페이지 번호를 클릭하면
+            $("#page").val($(this).data("page"));  // 해당 페이지 번호를 입력 필드에 가져옴
+            $("#searchForm").submit();            // 폼을 전송
+        });
+
+        // 검색 처리
+        $("#btn_search").on('click', function(){
+            let text = $(".kw").val();     // 검색어 값
+            $("#kw").val(text);            // 폼의 입력 필드에 설정
+            $("#page").val(1);             // 1페이지를 페이지 필드에 설정
+            $("#searchForm").submit();     // 폼을 전송
+        });
+    });
+</script>
+{% endblock %}
 {% endblock %}
